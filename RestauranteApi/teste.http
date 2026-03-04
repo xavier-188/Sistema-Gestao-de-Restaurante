@@ -5,6 +5,9 @@ GET {{host}}
 ###Listar Clientes
 GET {{host}}/api/restaurante/cliente/listar
 
+###Buscar Cliente por ID
+GET {{host}}/api/restaurante/cliente/buscar/8
+
 ###Cadastrar Cliente
 POST {{host}}/api/restaurante/cliente/cadastrar
 Content-Type: application/json
@@ -29,7 +32,7 @@ Content-Type: application/json
 DELETE {{host}}/api/restaurante/cliente/remover/2
 
 ###Alterar Cliente por ID
-PATCH {{host}}/api/restaurante/cliente/alterar/4
+PATCH {{host}}/api/restaurante/cliente/alterar/8
 Content-Type: application/json
 
 {
@@ -68,7 +71,7 @@ Content-Type: application/json
 }
 
 ### Teste: Listar todas as reservas
-GET {{host}}/api/reserva/listar
+GET {{host}}/api/restaurante/reserva/listar
 
 
 ### Teste: Cadastrar reserva 

@@ -28,6 +28,15 @@ app.MapGet("/api/restaurante/cliente/listar", ([FromServices] AppDbContext ctx) 
 
 });
 
+app.MapGet("/api/restaurante/cliente/buscar/{id}", ([FromRoute] int id, [FromServices] AppDbContext ctx) =>
+{
+    var clienteBuscado = ctx.Clientes.Find(id);
+    if (clienteBuscado == null)
+        return Results.NotFound("Cliente não encontrado.");
+    return Results.Ok(clienteBuscado);
+
+});
+
 app.MapPost("/api/restaurante/cliente/cadastrar", ([FromBody] Cliente cliente, [FromServices] AppDbContext ctx) =>
 {
     var existente = ctx.Clientes.FirstOrDefault(c => c.Email == cliente.Email);
@@ -71,6 +80,7 @@ app.MapPatch("/api/restaurante/cliente/alterar/{id}", ([FromRoute] int id, [From
     return Results.Ok("Cliente alterado com sucesso!");
 
 });
+
 
 //Endpoints de Mesa
 
@@ -140,7 +150,7 @@ app.MapPatch("/api/restaurante/mesa/alterar/{id}", ([FromRoute] int id, [FromSer
 
 //Endpoints de Reserva
 
-app.MapGet("/api/reserva/listar", ([FromServices] AppDbContext ctx) =>
+app.MapGet("/api/restaurante/reserva/listar", ([FromServices] AppDbContext ctx) =>
 {
     var reservas = ctx.Reservas
         .Include(r => r.Cliente)
@@ -154,7 +164,7 @@ app.MapGet("/api/reserva/listar", ([FromServices] AppDbContext ctx) =>
     return Results.NotFound("Nenhuma reserva encontrada.");
 });
 
-app.MapGet("/api/reserva/buscar/{id}", ([FromRoute] int id, [FromServices] AppDbContext ctx) =>
+app.MapGet("/api/restaurante/reserva/buscar/{id}", ([FromRoute] int id, [FromServices] AppDbContext ctx) =>
 {
     var reserva = ctx.Reservas
         .Include(r => r.Cliente)
@@ -167,7 +177,7 @@ app.MapGet("/api/reserva/buscar/{id}", ([FromRoute] int id, [FromServices] AppDb
     return Results.Ok(reserva);
 });
 
-app.MapPost("/api/reserva/cadastrar", ([FromBody] Reserva reserva, [FromServices] AppDbContext ctx) =>
+app.MapPost("/api/restaurante/reserva/cadastrar", ([FromBody] Reserva reserva, [FromServices] AppDbContext ctx) =>
 {
     var cliente = ctx.Clientes.Find(reserva.ClienteId);
     if (cliente == null)
@@ -177,30 +187,33 @@ app.MapPost("/api/reserva/cadastrar", ([FromBody] Reserva reserva, [FromServices
     if (mesa == null)
         return Results.NotFound("Mesa não encontrada.");
 
+    if (reserva.DataHoraInicio == default)
+        return Results.BadRequest("Data de início inválida.");
+
 
     TimeSpan duracao = TimeSpan.FromHours(2);
-
     var inicioNova = reserva.DataHoraInicio;
-    var fimNova = reserva.DataHoraFim;
+    var fimNova = inicioNova.Add(duracao);
 
-    bool conflito = ctx.Reservas
-        .AsEnumerable()
-        .Any(r =>
-            r.MesaId == reserva.MesaId &&
-            r.DataHoraInicio < fimNova &&
-            r.DataHoraFim > inicioNova
-        );
+
+    reserva.DataHoraFim = fimNova;
+
+    bool conflito = ctx.Reservas.Any(r =>
+        r.MesaId == reserva.MesaId &&
+        r.DataHoraInicio < fimNova &&
+        r.DataHoraFim > inicioNova
+    );
 
     if (conflito)
-    {
         return Results.Conflict("Já existe reserva nesse horário para essa mesa.");
-    }
+
     ctx.Reservas.Add(reserva);
     ctx.SaveChanges();
+
     return Results.Created($"/api/reserva/buscar/{reserva.ReservaId}", reserva);
 });
 
-app.MapPatch("/api/reserva/alterar/{id}", ([FromRoute] int id, [FromBody] Reserva reservaAlterada, [FromServices] AppDbContext ctx) =>
+app.MapPatch("/api/restaurante/reserva/alterar/{id}", ([FromRoute] int id, [FromBody] Reserva reservaAlterada, [FromServices] AppDbContext ctx) =>
 {
     var reservaBuscada = ctx.Reservas.Find(id);
     if (reservaBuscada == null)
@@ -214,11 +227,13 @@ app.MapPatch("/api/reserva/alterar/{id}", ([FromRoute] int id, [FromBody] Reserv
     if (!mesaExiste)
         return Results.NotFound("Mesa não encontrada.");
 
-    var inicioNovo = reservaAlterada.DataHoraInicio;
-    var fimNovo = reservaAlterada.DataHoraFim;
+    if (reservaAlterada.DataHoraInicio == default)
+        return Results.BadRequest("Data de início inválida.");
 
-    if (fimNovo <= inicioNovo)
-        return Results.BadRequest("Horário final deve ser maior que o inicial.");
+    // 🔥 regra fixa de 2 horas
+    TimeSpan duracao = TimeSpan.FromHours(2);
+    var inicioNovo = reservaAlterada.DataHoraInicio;
+    var fimNovo = inicioNovo.Add(duracao);
 
     bool conflito = ctx.Reservas.Any(r =>
         r.ReservaId != id &&
@@ -230,7 +245,6 @@ app.MapPatch("/api/reserva/alterar/{id}", ([FromRoute] int id, [FromBody] Reserv
     if (conflito)
         return Results.Conflict("A mesa já está reservada nesse intervalo.");
 
-    // Atualizar dados
     reservaBuscada.ClienteId = reservaAlterada.ClienteId;
     reservaBuscada.MesaId = reservaAlterada.MesaId;
     reservaBuscada.DataHoraInicio = inicioNovo;

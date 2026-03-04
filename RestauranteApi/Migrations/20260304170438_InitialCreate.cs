@@ -33,8 +33,7 @@ namespace RestauranteApi.Migrations
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     Numero = table.Column<int>(type: "INTEGER", nullable: false),
-                    Capacidade = table.Column<int>(type: "INTEGER", nullable: false),
-                    Disponivel = table.Column<bool>(type: "INTEGER", nullable: false)
+                    Capacidade = table.Column<int>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -45,15 +44,16 @@ namespace RestauranteApi.Migrations
                 name: "Reservas",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                    ReservaId = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    DataHora = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    DataHoraInicio = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    DataHoraFim = table.Column<DateTime>(type: "TEXT", nullable: false),
                     ClienteId = table.Column<int>(type: "INTEGER", nullable: false),
                     MesaId = table.Column<int>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Reservas", x => x.Id);
+                    table.PrimaryKey("PK_Reservas", x => x.ReservaId);
                     table.ForeignKey(
                         name: "FK_Reservas_Clientes_ClienteId",
                         column: x => x.ClienteId,

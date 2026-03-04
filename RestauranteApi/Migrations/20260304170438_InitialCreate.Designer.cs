@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace RestauranteApi.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260226183605_ArrumandoReservasMesa")]
-    partial class ArrumandoReservasMesa
+    [Migration("20260304170438_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
