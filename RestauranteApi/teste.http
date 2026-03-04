@@ -3,10 +3,13 @@
 GET {{host}}
 
 ###Listar Clientes
-GET {{host}}/api/restaurante/listar
+GET {{host}}/api/restaurante/cliente/listar
+
+###Buscar Cliente por ID
+GET {{host}}/api/restaurante/cliente/buscar/8
 
 ###Cadastrar Cliente
-POST {{host}}/api/restaurante/cadastrar
+POST {{host}}/api/restaurante/cliente/cadastrar
 Content-Type: application/json
 
 {
@@ -14,3 +17,83 @@ Content-Type: application/json
     "telefone" : "41991056807",
     "email" : "enzoxavierbiscaia@gmail.com"
 }
+
+###Cadastrar Cliente 2
+POST {{host}}/api/restaurante/cliente/cadastrar
+Content-Type: application/json
+
+{
+    "nome" : "João Silva",
+    "telefone" : "41999034567",
+    "email" : "joaosilva@gmail.com"
+}
+
+###Remover Cliente por ID
+DELETE {{host}}/api/restaurante/cliente/remover/2
+
+###Alterar Cliente por ID
+PATCH {{host}}/api/restaurante/cliente/alterar/8
+Content-Type: application/json
+
+{
+    "nome" : "João Vitor",
+    "telefone" : "41999999999",
+    "email" : "joaosilva@gmail.com"
+}
+
+
+###Listar Mesas
+GET {{host}}/api/restaurante/mesa/listar
+
+###Buscar mesa por número
+GET {{host}}/api/restaurante/mesa/buscar/10
+
+###Cadastrar Mesa
+POST {{host}}/api/restaurante/mesa/cadastrar
+Content-Type: application/json
+
+{
+    "numero" : 20,
+    "capacidade" : 8
+}
+
+###Remover Mesa por ID
+DELETE {{host}}/api/restaurante/mesa/remover/3
+
+###Alterar Mesa por ID
+PATCH {{host}}/api/mesa/alterar/2
+Content-Type: application/json
+
+{
+    "numero" : 10,
+    "capacidade" : 4
+
+}
+
+### Teste: Listar todas as reservas
+GET {{host}}/api/restaurante/reserva/listar
+
+
+### Teste: Cadastrar reserva 
+POST {{host}}/api/reserva/cadastrar
+Content-Type: application/json
+
+{
+    "clienteId": 5,
+    "mesaId": 4,
+    "dataHoraInicio": "2026-03-10T19:00:00",
+  "dataHoraFim": "2026-03-10T21:00:00"
+}
+### Cadastrar reserva no mesmo horário
+POST {{host}}/api/reserva/cadastrar
+Content-Type: application/json
+
+{
+    "clienteId" : 6,
+    "mesaId" : 4,
+    "dataHoraInicio": "2026-03-10T21:00:00",
+  "dataHoraFim": "2026-03-10T22:00:00"
+}
+
+### Remover Reservas
+DELETE {{host}}/api/restaurante/reserva/remover/9

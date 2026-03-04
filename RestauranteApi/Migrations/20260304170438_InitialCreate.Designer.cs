@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace RestauranteApi.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260225214450_InitialCreate")]
+    [Migration("20260304170438_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -51,9 +51,6 @@ namespace RestauranteApi.Migrations
                     b.Property<int>("Capacidade")
                         .HasColumnType("INTEGER");
 
-                    b.Property<bool>("Disponivel")
-                        .HasColumnType("INTEGER");
-
                     b.Property<int>("Numero")
                         .HasColumnType("INTEGER");
 
@@ -64,20 +61,23 @@ namespace RestauranteApi.Migrations
 
             modelBuilder.Entity("Reserva", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("ReservaId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
                     b.Property<int>("ClienteId")
                         .HasColumnType("INTEGER");
 
-                    b.Property<DateTime>("DataHora")
+                    b.Property<DateTime>("DataHoraFim")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("DataHoraInicio")
                         .HasColumnType("TEXT");
 
                     b.Property<int>("MesaId")
                         .HasColumnType("INTEGER");
 
-                    b.HasKey("Id");
+                    b.HasKey("ReservaId");
 
                     b.HasIndex("ClienteId");
 
@@ -88,7 +88,7 @@ namespace RestauranteApi.Migrations
 
             modelBuilder.Entity("Reserva", b =>
                 {
-                    b.HasOne("Cliente", "cliente")
+                    b.HasOne("Cliente", "Cliente")
                         .WithMany("Reservas")
                         .HasForeignKey("ClienteId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -100,9 +100,9 @@ namespace RestauranteApi.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Mesa");
+                    b.Navigation("Cliente");
 
-                    b.Navigation("cliente");
+                    b.Navigation("Mesa");
                 });
 
             modelBuilder.Entity("Cliente", b =>

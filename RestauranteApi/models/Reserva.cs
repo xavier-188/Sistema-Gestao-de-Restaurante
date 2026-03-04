@@ -1,10 +1,13 @@
 public class Reserva
 {
-    public int Id { get; set; }
-    public DateTime DataHora { get; set; }
-    public int ClienteId { get; set; }
-    public Cliente? cliente { get; set; }
-    public int MesaId { get; set; }
-    public Mesa Mesa { get; set; }
+    public int ReservaId { get; set; }
+    
+    public DateTime DataHoraInicio { get; set; }
+    public DateTime DataHoraFim { get; set; }
 
+    public int ClienteId { get; set; }
+    public Cliente? Cliente { get; set; }
+
+    public int MesaId { get; set; }
+    public Mesa? Mesa { get; set; }
 }
