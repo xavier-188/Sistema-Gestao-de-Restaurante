@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import React from "react";
 import { BrowserRouter, Link, Route, Routes } from "react-router-dom";
 
@@ -13,10 +14,16 @@ import ListarReservas from "./components/pages/reserva/ListarRerservas";
 import CadastrarReserva from "./components/pages/reserva/CadastrarReserva";
 import EditarReserva from "./components/pages/reserva/EditarReserva";
 import "./App.css"
+=======
+import React from 'react';
+
+import './App.css';
+>>>>>>> 615a181e14b8627cde9af451e510e617090ee95f
 
 function App() {
   return (
     <div className="App">
+<<<<<<< HEAD
       <h1>Restaurante</h1>
       <BrowserRouter>
         <nav>
@@ -67,6 +74,21 @@ function App() {
           ></Route>
         </Routes>
       </BrowserRouter>
+=======
+      <header className="App-header">
+        <p>
+          Edit <code>src/App.tsx</code> and save to reload.
+        </p>
+        <a
+          className="App-link"
+          href="https://reactjs.org"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Learn React
+        </a>
+      </header>
+>>>>>>> 615a181e14b8627cde9af451e510e617090ee95f
     </div>
   );
 }
